@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Basic_API;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics.Metrics;
 
@@ -11,55 +12,61 @@ namespace Basic_API.Controllers
     [ApiController]
     public class EventsController : ControllerBase
     {
-        private static List<Event> events;
-        private int counter;
-        public EventsController()
+
+        private int counter=4;
+        private IDataContext dataContext;
+
+        public EventsController(IDataContext context)
         {
-            events = new List<Event>();
-
-            events.Add(new Event { Id = 1, Title = "Event 1", Start = new DateOnly(2023, 10, 15) });
-            events.Add(new Event { Id = 2, Title = "Event 2", Start = new DateOnly(2023, 10, 16) });
-            events.Add(new Event { Id = 3, Title = "Event 3", Start = new DateOnly(2023, 10, 17) });
-
-            counter = 4;
+            dataContext = context;
         }
-      
+
         // GET: api/<EventsController>
         [HttpGet]
-        public  IEnumerable<Event> Get()
+        public  IActionResult Get()
         {
-            return events;
+            return Ok(dataContext.EventList);
         }
 
         // GET api/<EventsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var eve = dataContext.EventList.Find(e => e.Id == id);
+            if (eve == null)
+            {
+                return NotFound();
+            }
+            return Ok(eve);
         }
 
         // POST api/<EventsController>
         [HttpPost]
-        public void Post(DateOnly date, string value)
+        public IActionResult Post([FromBody] Event newEvent)
         {
-            events.Add(new Event { Id = counter++, Title = value, Start = date });
+            dataContext.EventList.Add(new Event { Id = 2, Title = newEvent.Title });
+            return BadRequest(dataContext.EventList);
         }
 
-        // PUT api/<EventsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, DateOnly date, string value)
+        public IActionResult Put(int id, [FromBody] Event updateEvent)
         {
-            Event index = events.Find(e => e.Id == id);
-            index.Title=value;
-            index.Start = date;
+            var eve = dataContext.EventList.Find(e => e.Id == id);
+            if(eve == null)
+            {
+               return NotFound(eve);
+            }
+            eve.Title = updateEvent.Title;
+            return Ok(eve);
         }
 
         // DELETE api/<EventsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            var index = events.Find(e => e.Id == id);
-            events.Remove(index);
+            var index = dataContext.EventList.Find(e => e.Id == id);
+            dataContext.EventList.Remove(index);
+            return NoContent();
         }
     }
 }

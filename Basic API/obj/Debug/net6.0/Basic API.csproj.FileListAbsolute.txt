@@ -25,3 +25,4 @@ C:\תכנות לימודים\שנה ב\.net core\Basic API\Basic API\obj\Debug\n
 C:\תכנות לימודים\שנה ב\.net core\Basic API\Basic API\obj\Debug\net6.0\Basic API.pdb
 C:\תכנות לימודים\שנה ב\.net core\Basic API\Basic API\obj\Debug\net6.0\Basic API.genruntimeconfig.cache
 C:\תכנות לימודים\שנה ב\.net core\Basic API\Basic API\obj\Debug\net6.0\ref\Basic API.dll
+C:\תכנות לימודים\שנה ב\.net core\Basic API\Basic API\bin\Debug\net6.0\CsvHelper.dll
